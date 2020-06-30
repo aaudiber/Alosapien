@@ -1,74 +1,74 @@
-players={'Drew':145,'JZ':90,'Mike':95,'Alo':65,'Arno':80,'Will':75,'Jind':55,'Wang':40} #scores of players
-teamNum=2 #number of teams we want in the game
-GamingPlayers=['Alo','Will','Wang','JZ','Mike','Drew']# players who will be in the match
+PLAYERS = {'Drew':145,'JZ':90,'Mike':95,'Alo':65,'Arno':80,'Will':75,'Jind':55,'Wang':40} #scores of players
+TEAM_NUM = 2 #number of teams we want in the game
+GAMING_PLAYERS = ['Alo','Will','Wang','JZ','Mike','Drew']# players who will be in the match
 
 import random
 
-def randomPartition(numbers,n):
-    Teams=[]
+def random_partition(numbers,n):
+    teams = []
     for team in range(n):
-        Teams+=[[]]
+        teams += [[]]
     for number in numbers:
-        Teams[random.randrange(n)]+=[number]
-    return sorted(Teams)
+        teams[random.randrange(n)] += [number]
+    return sorted(teams)
 
-def TeamSum(Team):
-    Sum=0
-    for player in Team:
-        Sum+=players[player]
-    return Sum
+def team_sum(team):
+    total=0
+    for player in team:
+        total += PLAYERS[player]
+    return total
 
-def PartitionInequality(Teams):
-    inequality=0
-    for teamA in Teams:
-        for teamB in Teams:
-            inequality=max(inequality,TeamSum(teamA)-TeamSum(teamB))
+def partition_inequality(teams):
+    inequality = 0
+    for team_a in teams:
+        for team_b in teams:
+            inequality = max(inequality, team_sum(team_a) - team_sum(team_b))
     return inequality
 
 
-def BestTeams(players1,setupNum,teamNum):
-    players1=sorted(players1)
-    maxNameLength=0
-    for player in players1:
-        maxNameLength=max(maxNameLength,len(player))
-    PossibleTeams=[]
-    worst=[players1]+[[]]*(teamNum-1)
-    for team in range(setupNum):
-        PossibleTeams+=[worst]
+def best_teams(players_1, setup_num, team_num):
+    players_1 = sorted(players_1)
+    max_name_length = 0
+    for player in players_1:
+        max_name_length = max(max_name_length, len(player))
+    possible_teams = []
+    worst = [players_1] + [[]]*(team_num-1)
+    for team in range(setup_num):
+        possible_teams += [worst]
     for ind in range(2000):
-        partition=randomPartition(players1,teamNum)
-        value=PartitionInequality(partition)
-        i=0
-        while (partition not in PossibleTeams) and (i>-1*len(PossibleTeams)) and (value<PartitionInequality(PossibleTeams[i-1])):
-            i-=1
-        if i!=0:
+        partition = random_partition(players_1, team_num)
+        value = partition_inequality(partition)
+        i = 0
+        while (partition not in possible_teams) and (i > -1*len(possible_teams)) and (value < partition_inequality(possible_teams[i-1])):
+            i -= 1
+        if i != 0:
             #print('ho ho, better yet ',i)
             #print('    ', partition,',',PartitionInequality(partition))
             #for teams in PossibleTeams:
             #    print(teams)
             #    print('     ',PartitionInequality(teams))
             #print('    ',PossibleTeams)
-            PossibleTeams=PossibleTeams[:i]+[partition]+PossibleTeams[i:-1]
+            possible_teams = possible_teams[:i] + [partition] + possible_teams[i:-1]
             #print('    ',PossibleTeams)
     print('Most even team setups found')
-    for teams in PossibleTeams:
-        printouts=[]
+    for teams in possible_teams:
+        printouts = []
         for team in teams:
-            printout=''
+            printout = ''
             for player in team:
-                bit1=1+maxNameLength-len(player)
-                score=str(players[player])
-                bit2=3-len(score)
-                printout+=bit1*' '+player+':'+score+bit2*' '+' '
-            printouts+=[printout]
-        Len=0
+                bit_1 = 1 + max_name_length - len(player)
+                score = str(PLAYERS[player])
+                bit_2 = 3 - len(score)
+                printout += bit_1*' ' + player + ':' + score + bit_2*' ' + ' '
+            printouts += [printout]
+        max_len = 0
         for printout in printouts:
-            Len=max(Len,len(printout))
-        ind=0
+            max_len = max(max_len, len(printout))
+        ind = 0
         for team in teams:
-            printout=printouts[ind]
-            print(printout+' '*(Len-len(printout))+'  total=',TeamSum(team))
-            ind+=1
-        print(' '*Len,'advantage=',PartitionInequality(teams))
+            printout = printouts[ind]
+            print(printout + ' '*(max_len-len(printout)) + '  total=', team_sum(team))
+            ind += 1
+        print(' '*max_len, 'advantage=', partition_inequality(teams))
 
-BestTeams(GamingPlayers,5,teamNum)
+best_teams(GAMING_PLAYERS, 5, TEAM_NUM)
