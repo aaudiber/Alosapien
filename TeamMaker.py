@@ -1,10 +1,10 @@
-PLAYERS = {'Drew':145,'JZ':90,'Mike':95,'Alo':65,'Arno':80,'Will':75,'Jind':55,'Wang':40} #scores of players
-TEAM_NUM = 2 #number of teams we want in the game
-GAMING_PLAYERS = ['Alo','Will','Wang','JZ','Mike','Drew']# players who will be in the match
-
 import random
 
-def random_partition(numbers,n):
+PLAYERS = {'Drew':145, 'JZ':90, 'Mike':95, 'Alo':65, 'Arno':80, 'Will':75, 'Jind':55, 'Wang':40}  # scores of players
+TEAM_NUM = 2  # number of teams we want in the game
+GAMING_PLAYERS = ['Alo', 'Will', 'Wang', 'JZ', 'Mike', 'Drew']  # players who will be in the match
+
+def random_partition(numbers, n):
     teams = []
     for team in range(n):
         teams += [[]]
@@ -12,11 +12,13 @@ def random_partition(numbers,n):
         teams[random.randrange(n)] += [number]
     return sorted(teams)
 
+
 def team_sum(team):
     total=0
     for player in team:
         total += PLAYERS[player]
     return total
+
 
 def partition_inequality(teams):
     inequality = 0
@@ -71,4 +73,5 @@ def best_teams(players_1, setup_num, team_num):
             ind += 1
         print(' '*max_len, 'advantage=', partition_inequality(teams))
 
+        
 best_teams(GAMING_PLAYERS, 5, TEAM_NUM)
